@@ -27,13 +27,13 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-[70] transition-all duration-500 ${
           scrolled
             ? "bg-black/90 backdrop-blur-md border-b border-white/5"
             : "bg-transparent"
         }`}
       >
-        <div className="max-w-[1440px] mx-auto px-8 md:px-12 lg:px-16">
+        <div className="max-w-[1490px] mx-auto px-8 md:px-12 lg:px-1">
           <div className="flex items-center justify-between h-[72px]">
             {/* Logo */}
             <Link href="/" className="flex items-center group">
@@ -53,8 +53,8 @@ export default function Navbar() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="relative text-white/80 hover:text-[#C9A962] transition-colors duration-300 text-[11px] tracking-[0.2em] font-light group"
-                    style={{ fontFamily: "Jost, sans-serif", letterSpacing: "0.2em" }}
+                    className="relative text-[#8a8680] hover:text-[#C9A962] transition-colors duration-300 font-light group"
+                    style={{ fontFamily: "Jost, sans-serif", fontSize: "14px", letterSpacing: "2px" }}
                   >
                     {link.label}
                     <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[#C9A962] transition-all duration-300 group-hover:w-full" />
@@ -91,7 +91,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 z-40 bg-black/98 flex flex-col items-center justify-center transition-all duration-500 md:hidden ${
+        className={`fixed inset-0 z-[60] bg-black flex flex-col items-center justify-center transition-opacity duration-300 md:hidden ${
           menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >

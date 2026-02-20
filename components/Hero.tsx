@@ -1,12 +1,42 @@
 "use client";
 
 import { useState } from "react";
+import ParallaxElement from "./ParallaxElement";
 
 export default function Hero() {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleDownload = (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    if (!email.trim()) {
+      setError("Please enter your email address");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    setIsLoading(true);
+
+    // Simulate brief validation delay for premium feel
+    setTimeout(() => {
+      window.open(
+        "/images/volatiles-canvas-brochure-2026_sv-ENG_Team_Southeast.pdf",
+        "_blank"
+      );
+      setIsLoading(false);
+    }, 300);
   };
 
   return (
@@ -21,9 +51,11 @@ export default function Hero() {
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/60" />
 
-      {/* Subtle radial glow */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none"
+      {/* Subtle radial glow — drifts slightly on scroll for depth */}
+      <ParallaxElement
+        speed={0.25}
+        baseTransform="translateX(-50%) translateY(-50%)"
+        className="absolute top-1/2 left-1/2 w-[600px] h-[400px] pointer-events-none"
         style={{
           background:
             "radial-gradient(ellipse at center, rgba(201,169,98,0.08) 0%, transparent 70%)",
@@ -69,16 +101,14 @@ export default function Hero() {
           className="text-[#B3B3B3] mb-12"
           style={{
             fontFamily: "Jost, sans-serif",
-            fontSize: "clamp(13px, 1.5vw, 15px)",
+            fontSize: "clamp(13px, 1.5vw, 20px)",
             fontWeight: 300,
             letterSpacing: "0.02em",
             maxWidth: "440px",
           }}
         >
           Interactive LED art panels fused with the world&apos;s finest
-          materials.
-          <br />
-          Invisible technology. Visible luxury.
+          materials.Invisible technology. Visible luxury.
         </p>
 
         {/* Form */}
@@ -86,32 +116,48 @@ export default function Hero() {
           onSubmit={handleDownload}
           className="flex flex-col sm:flex-row gap-3 w-full max-w-[560px]"
         >
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className="flex-1 px-5 py-3.5 text-white/80 placeholder-white/30 text-sm outline-none"
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.25)",
-              fontFamily: "Jost, sans-serif",
-              fontSize: "13px",
-              letterSpacing: "0.03em",
-            }}
-          />
+          <div className="flex-1">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError("");
+              }}
+              placeholder="Enter your email"
+              className="w-full px-5 py-3.5 text-white/80 placeholder-white/30 text-sm outline-none"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: `1px solid ${error ? "#ef4444" : "rgba(255,255,255,0.25)"}`,
+                fontFamily: "Jost, sans-serif",
+                fontSize: "13px",
+                letterSpacing: "0.03em",
+              }}
+            />
+            {error && (
+              <p
+                className="mt-2 text-left text-red-400 text-xs"
+                style={{
+                  fontFamily: "Jost, sans-serif",
+                }}
+              >
+                {error}
+              </p>
+            )}
+          </div>
 
           <button
             type="submit"
-            className="px-7 py-3.5 text-black transition-all duration-300 hover:bg-[#B8962F]"
+            disabled={isLoading}
+            className="px-7 py-3.5 text-black transition-all duration-300 hover:bg-[#B8962F] hover:scale-[1.03] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
             style={{
               background: "#C9A962",
               fontFamily: "Jost, sans-serif",
-              fontSize: "11px",
+              fontSize: "14px",
               letterSpacing: "0.15em",
             }}
           >
-            DOWNLOAD BROCHURE
+            {isLoading ? "LOADING..." : "DOWNLOAD BROCHURE"}
           </button>
         </form>
       </div>

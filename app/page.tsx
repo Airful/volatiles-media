@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import InteractiveLightArt from "@/components/InteractiveLightArt";
-import ArtSurfaces from "@/components/ArtSurfaces";
+import CuratedMaterials from "@/components/CuratedMaterials";
 import TechnologySection from "@/components/TechnologySection";
 import Testimonial from "@/components/Testimonial";
 import SpacesTransformed from "@/components/SpacesTransformed";
@@ -15,7 +15,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <InteractiveLightArt />
-      <ArtSurfaces />
+      <CuratedMaterials />
       <TechnologySection />
       <Testimonial />
       <SpacesTransformed />

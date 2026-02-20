@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
+import ParallaxElement from "./ParallaxElement";
 
 const applications = [
   {
@@ -39,9 +42,10 @@ const applications = [
 
 export default function SpacesTransformed() {
   return (
-    <section id="applications" className="relative bg-black py-24 md:py-32 overflow-hidden">
-      {/* Top glow */}
-      <div
+    <section id="applications" className="relative bg-[#141414] py-24 md:py-32 max-[500px]:py-[76px] overflow-hidden">
+      {/* Top glow — drifts up as section enters view */}
+      <ParallaxElement
+        speed={0.2}
         className="absolute top-0 right-0 w-[500px] h-[300px] pointer-events-none"
         style={{
           background:
@@ -49,14 +53,14 @@ export default function SpacesTransformed() {
         }}
       />
 
-      <div className="relative z-10 max-w-[1200px] mx-auto px-8 md:px-12 lg:px-16">
+      <div className="relative z-10 container-custom">
         {/* Header */}
         <div className="text-center mb-16 md:mb-20">
           <p
-            className="text-[#C9A962] mb-5"
+            className="text-[#C9A962] mb-0"
             style={{
               fontFamily: "Jost, sans-serif",
-              fontSize: "11px",
+              fontSize: "15px",
               letterSpacing: "0.4em",
               fontWeight: 300,
             }}
@@ -68,7 +72,7 @@ export default function SpacesTransformed() {
             style={{
               fontFamily: "Cormorant Garamond, Georgia, serif",
               fontSize: "clamp(36px, 5vw, 62px)",
-              fontWeight: 300,
+              fontWeight: 500,
               letterSpacing: "-0.01em",
             }}
           >
@@ -132,7 +136,7 @@ function ApplicationCard({
       {/* Icon + text */}
       <div className="flex flex-col items-center px-8 py-12 w-full">
       {/* Icon */}
-      <div className="mb-6 text-white/60 group-hover:text-[#C9A962] transition-colors duration-300">
+      <div className="mb-6 text-white group-hover:text-[#C9A962] transition-colors duration-300">
         <AppIcon icon={icon} />
       </div>
 
@@ -141,8 +145,8 @@ function ApplicationCard({
         className="text-white mb-4"
         style={{
           fontFamily: "Cormorant Garamond, Georgia, serif",
-          fontSize: "20px",
-          fontWeight: 400,
+          fontSize: "30px",
+          fontWeight: 600,
           letterSpacing: "0.01em",
         }}
       >
@@ -154,10 +158,10 @@ function ApplicationCard({
         className="text-[#808080] leading-relaxed"
         style={{
           fontFamily: "Jost, sans-serif",
-          fontSize: "13px",
+          fontSize: "17px",
           fontWeight: 300,
           letterSpacing: "0.02em",
-          lineHeight: "1.7",
+          lineHeight: "1.2",
         }}
       >
         {desc}

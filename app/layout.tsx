@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import MouseGlow from "@/components/MouseGlow";
 
 export const metadata: Metadata = {
   title: "Volatiles — Where Light Meets Matter",
@@ -24,7 +25,12 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="bg-black text-white antialiased">{children}</body>
+      <body className="bg-black text-white antialiased">
+        <MouseGlow />
+        <div className="relative z-10">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

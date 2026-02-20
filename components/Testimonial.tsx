@@ -1,31 +1,40 @@
+"use client";
+
+import ParallaxElement from "./ParallaxElement";
+
 export default function Testimonial() {
   return (
     <section
-      className="relative bg-black py-28 md:py-36 overflow-hidden"
+      className="relative bg-black py-28 md:pt-36 md:pb-[82px] max-[500px]:py-[92px] overflow-hidden"
       style={{
         background: "linear-gradient(180deg, #000 0%, #0d0d0d 50%, #000 100%)",
       }}
     >
-      {/* Large decorative quote mark */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
+      {/* Large decorative quote mark — slow parallax drift */}
+      <ParallaxElement
+        speed={0.15}
+        baseTransform="translateX(-50%) translateY(-50%)"
+        className="absolute top-1/2 left-1/2 pointer-events-none select-none"
         style={{
-          fontFamily: "Cormorant Garamond, serif",
+          fontFamily: "jost , sans-serifss ",
           fontSize: "clamp(120px, 18vw, 220px)",
           color: "rgba(201,169,98,0.08)",
           lineHeight: 1,
           fontWeight: 300,
+          marginTop: "-88px",
+          width: "30px",
         }}
         aria-hidden="true"
       >
         "
-      </div>
+      </ParallaxElement>
 
-      <div className="relative z-10 max-w-[900px] mx-auto px-8 md:px-12 text-center">
+      <div className="relative z-10 container-custom text-center">
         {/* Large quote mark above */}
         <div
           className="flex justify-center mb-8"
           aria-hidden="true"
+          style={{ display: "none" }}
         >
           <svg
             width="28"
@@ -51,6 +60,9 @@ export default function Testimonial() {
             fontStyle: "italic",
             letterSpacing: "0.01em",
             lineHeight: "1.65",
+            maxWidth: "676px",
+            margin: "0 auto",
+            width: "100%",
           }}
         >
           The volatiles panel in our yacht&apos;s master suite has become the
@@ -63,9 +75,10 @@ export default function Testimonial() {
           className="text-[#808080]"
           style={{
             fontFamily: "Jost, sans-serif",
-            fontSize: "12px",
+            fontSize: "20px",
             fontWeight: 300,
-            letterSpacing: "0.2em",
+            letterSpacing: "0",
+            marginTop: "26px",
           }}
         >
           90m Lürssen Yacht Installation

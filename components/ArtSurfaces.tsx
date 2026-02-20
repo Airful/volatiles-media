@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import ParallaxElement from "./ParallaxElement";
 
 const materials = [
   {
@@ -27,18 +30,20 @@ export default function ArtSurfaces() {
   return (
     <section
       id="materials"
-      className="relative bg-black py-28 md:py-36 overflow-hidden"
+      className="relative bg-black py-28 md:py-36 max-[500px]:py-[92px] overflow-hidden"
     >
-      {/* Background glow top */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] pointer-events-none"
+      {/* Background glow top — drifts upward as section enters view */}
+      <ParallaxElement
+        speed={0.2}
+        baseTransform="translateX(-50%)"
+        className="absolute top-0 left-1/2 w-[700px] h-[300px] pointer-events-none"
         style={{
           background:
             "radial-gradient(ellipse at top, rgba(201,169,98,0.08) 0%, transparent 65%)",
         }}
       />
 
-      <div className="relative z-10 max-w-[1200px] mx-auto px-8 md:px-12 lg:px-16">
+      <div className="relative z-10 container-custom">
         {/* Header */}
         <div className="text-center mb-16 md:mb-20">
           <p

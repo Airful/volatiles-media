@@ -1,22 +1,30 @@
 "use client";
 
+import ParallaxElement from "./ParallaxElement";
+
 export default function InteractiveLightArt() {
   return (
     <section className="relative w-full h-screen overflow-hidden">
 
-      {/* Background Video */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
+      {/* Background Video — extended height so parallax drift never reveals edges */}
+      <ParallaxElement
+        speed={0.18}
+        className="absolute left-0 right-0 w-full"
+        style={{ top: "-8%", height: "116%" }}
       >
-        <source
-          src="https://mediumaquamarine-cheetah-559193.hostingersite.com/wp-content/uploads/2025/12/Hero_Skyline_12.mp4"
-          type="video/mp4"
-        />
-      </video>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source
+            src="https://mediumaquamarine-cheetah-559193.hostingersite.com/wp-content/uploads/2025/12/Hero_Skyline_12.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </ParallaxElement>
 
       {/* Dark Overlay (Same as WP feel) */}
       <div className="absolute inset-0 bg-black/40"></div>
@@ -52,8 +60,8 @@ export default function InteractiveLightArt() {
 
         {/* Button */}
         <a
-          href="#Enquire"
-          className="mt-10 px-10 py-4 border border-white/70 text-white transition-all duration-300 hover:bg-white hover:text-black"
+          href="#enquire"
+          className="mt-10 px-10 py-4 border border-white/70 text-white transition-all duration-300 hover:border-[#C9A962] hover:bg-[#C9A962] hover:text-black hover:scale-[1.03]"
           style={{
             fontFamily: "Jost, sans-serif",
             fontSize: "11px",
