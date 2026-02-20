@@ -4,8 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import ParallaxElement from "./ParallaxElement";
 
+type Status = "idle" | "loading" | "success" | "error";
+
 export default function ConsultationForm() {
   const [form, setForm] = useState({ name: "", email: "", vision: "" });
+  const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -13,9 +17,32 @@ export default function ConsultationForm() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // form submission logic
+    setStatus("loading");
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/enquire", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrorMsg(data.error || "Something went wrong. Please try again.");
+        setStatus("error");
+        return;
+      }
+
+      setStatus("success");
+      setForm({ name: "", email: "", vision: "" });
+    } catch {
+      setErrorMsg("Network error. Please check your connection and try again.");
+      setStatus("error");
+    }
   };
 
   return (
@@ -219,10 +246,40 @@ export default function ConsultationForm() {
                 />
               </div>
 
+              {/* Error message */}
+              {status === "error" && (
+                <p
+                  className="text-red-400 text-center"
+                  style={{
+                    fontFamily: "Jost, sans-serif",
+                    fontSize: "13px",
+                    fontWeight: 300,
+                  }}
+                >
+                  {errorMsg}
+                </p>
+              )}
+
+              {/* Success message */}
+              {status === "success" && (
+                <p
+                  className="text-[#C9A962] text-center"
+                  style={{
+                    fontFamily: "Jost, sans-serif",
+                    fontSize: "13px",
+                    fontWeight: 300,
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  Thank you — we will be in touch shortly.
+                </p>
+              )}
+
               {/* Submit */}
               <button
                 type="submit"
-                className="w-full py-4 text-black font-medium transition-all duration-300 hover:bg-[#B8962F] hover:scale-[1.01] active:scale-[0.99]"
+                disabled={status === "loading" || status === "success"}
+                className="w-full py-4 text-black font-medium transition-all duration-300 hover:bg-[#B8962F] hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
                 style={{
                   fontFamily: "Jost, sans-serif",
                   fontSize: "11px",
@@ -232,7 +289,7 @@ export default function ConsultationForm() {
                   borderRadius: "2px",
                 }}
               >
-                SUBMIT ENQUIRY
+                {status === "loading" ? "SENDING..." : status === "success" ? "SENT" : "SUBMIT ENQUIRY"}
               </button>
             </form>
           </div>
