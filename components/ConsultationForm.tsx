@@ -73,6 +73,11 @@ export default function ConsultationForm() {
               </p>
 
               <button
+                onClick={() =>
+                  document
+                    .getElementById("hero")
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
                 className="px-7 py-3.5 text-white border border-white/40 hover:border-[#C9A962] hover:text-[#C9A962] hover:scale-[1.03] transition-all duration-300"
                 style={{
                   fontFamily: "Jost, sans-serif",

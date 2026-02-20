@@ -4,7 +4,7 @@ import ParallaxElement from "./ParallaxElement";
 
 export default function InteractiveLightArt() {
   return (
-    <section className="relative w-full h-screen overflow-hidden">
+    <section className="relative w-full h-screen overflow-hidden" id="experience">
 
       {/* Background Video — extended height so parallax drift never reveals edges */}
       <ParallaxElement

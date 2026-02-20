@@ -32,7 +32,7 @@ const materials = [
 
 export default function CuratedMaterials() {
   return (
-    <section className="relative bg-black w-full py-20 md:py-28 max-[500px]:py-[60px] overflow-hidden">
+    <section id="materials" className="relative bg-black w-full py-20 md:py-28 max-[500px]:py-[60px] overflow-hidden">
       {/* Background glow - drifts with scroll for depth */}
       <ParallaxElement
         speed={0.15}

@@ -25,6 +25,18 @@ html {
   scroll-behavior: smooth;
 }
 
+#materials {
+  scroll-margin-top: 100px;
+}
+
+#hero {
+  scroll-margin-top: 80px;
+}
+
+#experience {
+  scroll-margin-top: 0px;
+}
+
 body {
   background-color: #000000;
   color: #FFFFFF;
