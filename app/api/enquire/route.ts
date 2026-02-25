@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const { name, email, vision } = await req.json();
 
     await fetch(
-      "https://coda.io/apis/v1/docs/meysPijTHB/hooks/automation/grid-auto-0SptJuVZjo",
+      "https://coda.io/apis/v1/docs/meysPijTHB/hooks/automation/grid-auto-TPRsbgbIoM",
       {
         method: "POST",
         headers: {
