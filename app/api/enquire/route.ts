@@ -1,80 +1,60 @@
-import { NextRequest, NextResponse } from "next/server";
-
 export const dynamic = "force-dynamic";
 
-const CODA_URL =
-  "https://coda.io/apis/v1/docs/dmeysPijTHB/tables/sux3SC-k/rows";
+import { NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    // ── 1. Parse body ────────────────────────────────────────────────────────
-    let name: string, email: string, vision: string;
-    try {
-      ({ name, email, vision } = await req.json());
-    } catch {
-      return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
-    }
+    const { name, email, vision } = await req.json();
 
-    // ── 2. Validate ──────────────────────────────────────────────────────────
-    if (!name?.trim() || !email?.trim() || !vision?.trim()) {
+    if (!name || !email || !vision) {
       return NextResponse.json(
         { error: "Name, email, and message are required." },
         { status: 400 }
       );
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      return NextResponse.json({ error: "Invalid email address." }, { status: 400 });
-    }
-
-    // ── 3. Token guard ───────────────────────────────────────────────────────
-    const token = process.env.CODA_API_TOKEN;
-    if (!token) {
-      console.error("[enquire] CODA_API_TOKEN is not set in environment.");
-      return NextResponse.json({ error: "Server configuration error." }, { status: 500 });
-    }
-
-    // ── 4. Call Coda ─────────────────────────────────────────────────────────
-    const payload = {
-      rows: [
-        {
-          cells: [
-            { column: "Name",    value: name.trim()   },
-            { column: "Email",   value: email.trim()  },
-            { column: "Message", value: vision.trim() },
-          ],
-        },
-      ],
-      keyColumns: [],
-    };
-
-    console.log("[enquire] Posting to Coda:", CODA_URL);
-
-    const codaRes = await fetch(CODA_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const responseText = await codaRes.text();
-
-    // ── 5. Handle Coda errors ─────────────────────────────────────────────────
-    if (!codaRes.ok) {
-      console.error(
-        `[enquire] Coda error — ${codaRes.status} ${codaRes.statusText}\n`,
-        `Body: ${responseText}\n`,
-        `URL:  ${CODA_URL}`
+    if (!process.env.CODA_API_TOKEN) {
+      console.error("[enquire] CODA_API_TOKEN is not set.");
+      return NextResponse.json(
+        { error: "Server configuration error." },
+        { status: 500 }
       );
+    }
+
+    const codaRes = await fetch(
+      "https://coda.io/apis/v1/docs/dmeysPijTHB/tables/sux3SC-k/rows",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.CODA_API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rows: [
+            {
+              cells: [
+                { column: "Name",    value: name   },
+                { column: "Email",   value: email  },
+                { column: "Message", value: vision },
+              ],
+            },
+          ],
+          keyColumns: [],
+        }),
+      }
+    );
+
+    const text = await codaRes.text();
+
+    if (!codaRes.ok) {
+      console.error(`[enquire] Coda error ${codaRes.status}:`, text);
       return NextResponse.json(
         { error: "Failed to submit enquiry. Please try again." },
         { status: 502 }
       );
     }
 
-    console.log("[enquire] Success:", responseText);
+    console.log("[enquire] Success:", text);
     return NextResponse.json({ success: true }, { status: 200 });
 
   } catch (err) {
