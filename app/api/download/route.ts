@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const DOC_ID = "dmeysPijTHB";
-const TABLE_ID = "grid-auto-0SptJuVZjo";
+const DOC_ID = "meysPijTHB";
+const TABLE_ID = "grid-B54aTytYfn";
 const CODA_API_BASE = "https://coda.io/apis/v1";
 
 function jsonError(message: string, status: number) {
