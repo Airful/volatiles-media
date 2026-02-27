@@ -11,10 +11,6 @@ function jsonError(message: string, status: number) {
   return NextResponse.json({ error: message }, { status });
 }
 
-function normalizeString(value: unknown): string {
-  return typeof value === "string" ? value.trim() : "";
-}
-
 export async function POST(req: Request) {
   try {
     if (!process.env.CODA_API_TOKEN) {
@@ -23,13 +19,11 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
+    const email =
+      typeof body.email === "string" ? body.email.trim() : "";
 
-    const name = normalizeString(body.name);
-    const email = normalizeString(body.email);
-    const vision = normalizeString(body.vision);
-
-    if (!name || !email || !vision) {
-      return jsonError("Name, email, and message are required.", 400);
+    if (!email) {
+      return jsonError("Email is required.", 400);
     }
 
     const insertUrl = `${CODA_API_BASE}/docs/${DOC_ID}/tables/${TABLE_ID}/rows`;
@@ -44,11 +38,11 @@ export async function POST(req: Request) {
         rows: [
           {
             cells: [
-  { column: "Name", value: name },
-  { column: "Email", value: email },
-  { column: "Message", value: vision },
-  { column: "Source", value: "Enquiry Form" },
-],
+              { column: "Name", value: "" },
+              { column: "Email", value: email },
+              { column: "Message", value: "" },
+              { column: "Source", value: "Download Brochure" },
+            ],
           },
         ],
       }),

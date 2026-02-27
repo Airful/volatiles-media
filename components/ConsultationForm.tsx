@@ -6,10 +6,17 @@ import ParallaxElement from "./ParallaxElement";
 
 type Status = "idle" | "loading" | "success" | "error";
 
+const PDF_PATH =
+  "/volatiles-canvas-brochure-2026_sv-ENG_Team_Southeast.pdf";
+
 export default function ConsultationForm() {
   const [form, setForm] = useState({ name: "", email: "", vision: "" });
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  const [brochureEmail, setBrochureEmail] = useState("");
+  const [brochureStatus, setBrochureStatus] = useState<Status>("idle");
+  const [brochureError, setBrochureError] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -17,7 +24,42 @@ export default function ConsultationForm() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleBrochureSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setBrochureStatus("loading");
+    setBrochureError("");
+
+    try {
+      const res = await fetch("/api/download", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: brochureEmail }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setBrochureError(data.error || "Something went wrong. Please try again.");
+        setBrochureStatus("error");
+        return;
+      }
+
+      setBrochureStatus("success");
+      setBrochureEmail("");
+
+      const link = document.createElement("a");
+      link.href = PDF_PATH;
+      link.download = PDF_PATH.split("/").pop() ?? "brochure.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch {
+      setBrochureError("Network error. Please check your connection and try again.");
+      setBrochureStatus("error");
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("loading");
     setErrorMsg("");
@@ -99,23 +141,72 @@ export default function ConsultationForm() {
                 materials, dimensions, and possibilities.
               </p>
 
-              <button
-                onClick={() =>
-                  document
-                    .getElementById("hero")
-                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
-                }
-                className="px-7 py-3.5 text-white border border-white/40 hover:border-[#C9A962] hover:text-[#C9A962] hover:scale-[1.03] transition-all duration-300"
-                style={{
-                  fontFamily: "Jost, sans-serif",
-                  fontSize: "11px",
-                  fontWeight: 400,
-                  letterSpacing: "0.2em",
-                  borderRadius: "0px",
-                }}
+              <form
+                onSubmit={handleBrochureSubmit}
+                className="flex flex-col gap-3 w-full max-w-sm"
               >
-                DOWNLOAD BROCHURE
-              </button>
+                <input
+                  type="email"
+                  value={brochureEmail}
+                  onChange={(e) => setBrochureEmail(e.target.value)}
+                  placeholder="YOUR EMAIL"
+                  required
+                  className="w-full px-4 py-3.5 text-white/80 placeholder-white/30"
+                  style={{
+                    fontFamily: "Jost, sans-serif",
+                    fontSize: "11px",
+                    fontWeight: 300,
+                    letterSpacing: "0.15em",
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    borderRadius: "2px",
+                    outline: "none",
+                  }}
+                />
+                {brochureStatus === "error" && (
+                  <p
+                    className="text-red-400"
+                    style={{
+                      fontFamily: "Jost, sans-serif",
+                      fontSize: "12px",
+                      fontWeight: 300,
+                    }}
+                  >
+                    {brochureError}
+                  </p>
+                )}
+                {brochureStatus === "success" && (
+                  <p
+                    className="text-[#C9A962]"
+                    style={{
+                      fontFamily: "Jost, sans-serif",
+                      fontSize: "12px",
+                      fontWeight: 300,
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    Your download has started.
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  disabled={brochureStatus === "loading" || brochureStatus === "success"}
+                  className="px-7 py-3.5 text-white border border-white/40 hover:border-[#C9A962] hover:text-[#C9A962] hover:scale-[1.03] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  style={{
+                    fontFamily: "Jost, sans-serif",
+                    fontSize: "11px",
+                    fontWeight: 400,
+                    letterSpacing: "0.2em",
+                    borderRadius: "0px",
+                  }}
+                >
+                  {brochureStatus === "loading"
+                    ? "SENDING..."
+                    : brochureStatus === "success"
+                    ? "DOWNLOADED"
+                    : "DOWNLOAD BROCHURE"}
+                </button>
+              </form>
             </div>
 
             {/* Right: Form */}
