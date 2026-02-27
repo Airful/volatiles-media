@@ -1,4 +1,4 @@
-const PDF_PATH = "/volatiles-canvas-brochure-2026_sv-ENG_Team_Southeast.pdf";
+const PDF_PATH = "/images/volatiles-canvas-brochure-2026_sv-ENG_Team_Southeast.pdf";
 
 export async function handleBrochureDownload(email: string): Promise<void> {
   const res = await fetch("/api/download", {
