@@ -3,11 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import ParallaxElement from "./ParallaxElement";
+import { handleBrochureDownload } from "@/lib/downloadBrochure";
 
 type Status = "idle" | "loading" | "success" | "error";
-
-const PDF_PATH =
-  "/volatiles-canvas-brochure-2026_sv-ENG_Team_Southeast.pdf";
 
 export default function ConsultationForm() {
   const [form, setForm] = useState({ name: "", email: "", vision: "" });
@@ -30,31 +28,11 @@ export default function ConsultationForm() {
     setBrochureError("");
 
     try {
-      const res = await fetch("/api/download", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: brochureEmail }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setBrochureError(data.error || "Something went wrong. Please try again.");
-        setBrochureStatus("error");
-        return;
-      }
-
+      await handleBrochureDownload(brochureEmail);
       setBrochureStatus("success");
       setBrochureEmail("");
-
-      const link = document.createElement("a");
-      link.href = PDF_PATH;
-      link.download = PDF_PATH.split("/").pop() ?? "brochure.pdf";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch {
-      setBrochureError("Network error. Please check your connection and try again.");
+    } catch (err) {
+      setBrochureError(err instanceof Error ? err.message : "Network error. Please check your connection and try again.");
       setBrochureStatus("error");
     }
   };

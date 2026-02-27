@@ -2,41 +2,28 @@
 
 import { useState } from "react";
 import ParallaxElement from "./ParallaxElement";
+import { handleBrochureDownload } from "@/lib/downloadBrochure";
+
+type Status = "idle" | "loading" | "success" | "error";
 
 export default function Hero() {
   const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleDownload = (e: React.FormEvent) => {
+  const handleDownload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setStatus("loading");
     setError("");
 
-    if (!email.trim()) {
-      setError("Please enter your email address");
-      return;
+    try {
+      await handleBrochureDownload(email);
+      setStatus("success");
+      setEmail("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Network error. Please check your connection and try again.");
+      setStatus("error");
     }
-
-    if (!validateEmail(email)) {
-      setError("Please enter a valid email address");
-      return;
-    }
-
-    setIsLoading(true);
-
-    // Simulate brief validation delay for premium feel
-    setTimeout(() => {
-      window.open(
-        "/images/volatiles-canvas-brochure-2026_sv-ENG_Team_Southeast.pdf",
-        "_blank"
-      );
-      setIsLoading(false);
-    }, 300);
   };
 
   return (
@@ -148,7 +135,7 @@ export default function Hero() {
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={status === "loading" || status === "success"}
             className="px-7 py-3.5 text-black transition-all duration-300 hover:bg-[#B8962F] hover:scale-[1.03] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
             style={{
               background: "#C9A962",
@@ -157,7 +144,11 @@ export default function Hero() {
               letterSpacing: "0.15em",
             }}
           >
-            {isLoading ? "LOADING..." : "DOWNLOAD BROCHURE"}
+            {status === "loading"
+              ? "SENDING..."
+              : status === "success"
+              ? "DOWNLOADED"
+              : "DOWNLOAD BROCHURE"}
           </button>
         </form>
       </div>
