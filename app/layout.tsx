@@ -8,6 +8,11 @@ export const metadata: Metadata = {
     "Interactive LED art panels fused with the world's finest materials. Invisible technology. Visible luxury. Handcrafted in Germany.",
   keywords:
     "LED art panels, luxury interiors, interactive light art, volatiles, handcrafted Germany",
+  icons: {
+    icon: "/images/favicon-150x150.webp",
+    shortcut: "/images/favicon-150x150.webp",
+    apple: "/images/favicon-150x150.webp",
+  },
 };
 
 export default function RootLayout({
